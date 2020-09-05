@@ -1,0 +1,53 @@
+Alice and Bob take turns playing a game, with Alice starting first.
+
+Initially, there is a number N on the chalkboard.  On each player's turn, that player makes a move consisting of:
+
+Choosing any x with 0 < x < N and N % x == 0.
+Replacing the number N on the chalkboard with N - x.
+Also, if a player cannot make a move, they lose the game.
+
+Return True if and only if Alice wins the game, assuming both players play optimally.
+
+ 
+
+Example 1:
+
+Input: 2
+Output: true
+Explanation: Alice chooses 1, and Bob has no more moves.
+Example 2:
+
+Input: 3
+Output: false
+Explanation: Alice chooses 1, Bob chooses 1, and Alice has no more moves.
+ 
+
+Note:
+
+1 <= N <= 1000
+
+=============================SOLUTION==============================
+/*  ALGORITHM	
+-  we know that if for N = 1 person starting will always loose
+-  so the base case of 1 can be set directly as false i.e if N = 1 then starting player can not win
+-  now create a vector of size N+1 where each index i represents number in between 1-N and the value shows possibility to win starting from that number
+-  taking a bottom-up approach we calculate possibility of win for each number starting 2 upto N
+
+   class Solution{
+     bool divisorGame(int N){
+       vector<bool> result(N+1,false);
+
+       //
+       for(auto i = 2; i <=N; i++){
+         for(auto j = 1; j <= i/2; j++){
+           if(i%j==0){
+             if(result[i-j]==false){
+               result[i] = true;
+               break;
+             }
+           }	
+         }
+       }
+       return result[N];
+     }
+   };
