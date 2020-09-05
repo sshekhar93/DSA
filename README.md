@@ -1,2 +1,2 @@
-# competitive-programming
-competitive programming problems and solutions
+# DSA
+leetcode problems and solutions
