@@ -1,0 +1,42 @@
+Given a string s and a string t, check if s is subsequence of t.
+
+A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, "ace" is a subsequence of "abcde" while "aec" is not).
+
+Follow up:
+If there are lots of incoming S, say S1, S2, ... , Sk where k >= 1B, and you want to check one by one to see if T has its subsequence. In this scenario, how would you change your code?
+
+==============================SOlution==================================
+
+// start checking from the beginning of the t.
+// match the first character of s and t if they are same shift the pointers to both the strings by one to the right
+// if the characters don't match then move the pointer of t by one to the right but not of s
+// repeat the same process until entire length of either s and t is traversed
+// if t is travered completely but there is still charaters left to traverse in s then s is not a subsequence of t
+// if entire length of s is traversed then s is subsequence of t
+
+
+bool isSubsequenc(string s, string t){
+	bool result = false;
+	if(t.empty()){
+	  if(s.empty()){
+	    return true;
+	  }
+	  else
+	    return result;
+	}
+	if(s.empty())
+	  return true;
+	int i = 0,j = 0;
+	while(i < t.length()&& j<s.length()){
+	  if(t[i] == s[j]){
+	    i++;
+	    j++;
+	  }
+	  else
+	    ++i;
+	}
+	if(j==s.length())
+	  result = true;
+	
+	return result;
+}
