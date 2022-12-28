@@ -1,0 +1,89 @@
+A permutation of an array of integers is an arrangement of its members into a sequence or linear order.
+
+For example, for arr = [1,2,3], the following are all the permutations of arr: [1,2,3], [1,3,2], [2, 1, 3], [2, 3, 1], [3,1,2], [3,2,1].
+The next permutation of an array of integers is the next lexicographically greater permutation of its integer. More formally, if all the permutations of the array are sorted in one container according to their lexicographical order, then the next permutation of that array is the permutation that follows it in the sorted container. If such arrangement is not possible, the array must be rearranged as the lowest possible order (i.e., sorted in ascending order).
+
+For example, the next permutation of arr = [1,2,3] is [1,3,2].
+Similarly, the next permutation of arr = [2,3,1] is [3,1,2].
+While the next permutation of arr = [3,2,1] is [1,2,3] because [3,2,1] does not have a lexicographical larger rearrangement.
+Given an array of integers nums, find the next permutation of nums.
+
+The replacement must be in place and use only constant extra memory.
+
+Solution:
+
+class Solution {
+public:
+
+   // function to print the final array
+    void printNums(vector<int>& vec){
+        cout << '[';
+
+        for(int i = 0; i < vec.size()-1; i++)
+            cout << vec[i] << ',';
+
+        cout << vec[vec.size()-1] << ']' << endl;
+    }
+
+    //functiont to reverse the protion of the array in order to make it
+    //next permutation in sorted permutations
+    // Input
+    // @param vec
+    // - refernce to the vector in which elements needs to be swaped
+    // @param start
+    // - index in the vector from where swapping needs to start
+    // @param end
+    // - index till which swapping needs to be done
+    void reverseVec(vector<int>& vec, int start, int end){
+        int temp = 0;
+        while(start < end){
+            temp = vec[start];
+            vec[start] = vec[end];
+            vec[end] = temp;
+            start++;
+            end--;
+        }
+    }
+
+    // LOGIC::
+    // Step 1: starting from the rear find the first element [X] which is less than the previous element.
+    // this will tell us which is the number that needs to swapped with a larger number that came
+    // before it from the behind to obtain next larger permutation
+    // Step 2: if we don't find find any such number than all the numbers make the largest possible
+    // combination and simply reversing the vector will give the answer.
+    // Step 3: if we find the number as intended in step 1: then we again start from the back of the vector
+    // and find the number [Y] which just greater then the X. This is number which needs to be swapped with X
+    // to get next greatest number.
+    // Step 4: after swapping the value of X and Y. reverse the entire vector starting from index 1 greater than X till
+    // the end of the vector. This will make sure that we have the next largest number.
+    void nextPermutation(vector<int>& nums) {
+        if(nums.size() == 1){
+            printNums(nums);
+            return;
+        }
+        int endIdx = nums.size()-1;
+        int pointer = nums.size()-2;
+
+        // while loop to find the first instance of decrement from the rear of the vector
+        while(pointer >= 0 && nums[pointer] >= nums[pointer + 1])
+            pointer--;
+
+        // if entire vectore makes the largest possible combination then reverse the entire vector
+        // to get the answer
+        if(pointer < 0){
+            reverseVec(nums, pointer+1, endIdx);
+        }
+        else{
+           // find the smallest number greater than first decrement number that came before it when checking
+           // from back
+            while(endIdx > pointer && nums[pointer] >= nums[endIdx])
+                endIdx--;
+                
+            int temp = nums[pointer];
+            nums[pointer] = nums[endIdx];
+            nums[endIdx] = temp;
+            reverseVec(nums, pointer+1, nums.size()-1);
+        }
+        printNums(nums);
+    }
+};
