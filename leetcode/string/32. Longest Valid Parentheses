@@ -1,0 +1,112 @@
+Given a string containing just the characters '(' and ')', return the length of the longest valid (well-formed) parentheses 
+substring
+.
+
+ 
+
+Example 1:
+
+Input: s = "(()"
+Output: 2
+Explanation: The longest valid parentheses substring is "()".
+
+Example 2:
+
+Input: s = ")()())"
+Output: 4
+Explanation: The longest valid parentheses substring is "()()".
+
+Example 3:
+
+Input: s = ""
+Output: 0
+=======================================================================
+
+Solution:
+-----------
+
+
+Code:
+-------
+class Solution {
+public:
+
+    typedef stack<pair<int,int>> pairStack;
+
+    void processPairStack(pairStack& ps, stack<char>& st){
+        ps.push(make_pair<int,int>(st.size(), 2));
+        if(ps.size() == 1 or ps.top().second == -1)
+        {
+            cout << "ps size 1" << endl;
+            st.pop();
+            return;
+        }
+        else{
+            // cout << "ps not size 1" << endl;
+            while(ps.size()>1){
+                auto temp = ps.top();
+                ps.pop();
+                if(ps.top().second != -1 and (temp.first == ps.top().first or temp.first == ps.top().first -1)){
+                    ps.top().first = temp.first;
+                    ps.top().second += temp.second;
+                }
+                else{
+                    ps.push(temp);
+                    break;
+                }
+            }
+            st.pop();
+        }
+    }
+
+    int longestValidParentheses(string s) {
+        if(s.length() < 2)
+            return 0;
+        
+        int maxLen = 0;
+        int validStringStart = 0;
+        int validStringEnd = s.length() -1;
+
+        while(validStringStart < s.length() && s.at(validStringStart) == ')')
+            validStringStart++;
+
+        while(validStringEnd >= 0 && s.at(validStringEnd) == '(')
+            validStringEnd--;
+
+        // cout << "validStringStart: " << validStringStart << " validStringEnd: " << validStringEnd << endl;
+        stack<char> st;
+        pairStack ps;
+
+        for(int i = validStringStart; i <= validStringEnd; ++i)
+        {
+            if(s[i] == '('){
+                st.push(s[i]);
+                // cout << "symbol '(' st.size(): " << st.size() << " index: " << i << endl;
+            }
+            else{
+                if(!st.empty()){
+                    // cout << "st not empty" << endl;
+                    //st.pop();
+                    processPairStack(ps, st);
+                    maxLen = max(maxLen, ps.top().second);
+                }
+                else{
+                    cout << "st empty" << endl;
+                    int lastBalancedLen = ps.empty() ? 0 : ps.top().second;
+                    maxLen = max(maxLen, lastBalancedLen);
+                    ps.push(make_pair<int, int>(0, -1));
+                    while(i <= validStringEnd && s[i] == ')'){
+                        // cout << "index i: " << i << " paranthesis: " << s[i] << endl;
+                        i++;
+                    }
+                    i--;
+                    // cout << "after shifting index i: " << i << endl;
+                }
+            }
+            // cout << " for itr end: maxLen: " << maxLen << endl;
+        }
+        if(!ps.empty())
+            maxLen = max(maxLen, ps.top().second);
+        return maxLen;
+    }
+};
