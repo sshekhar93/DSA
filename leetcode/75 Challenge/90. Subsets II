@@ -1,0 +1,58 @@
+Given an integer array nums that may contain duplicates, return all possible 
+subsets
+ (the power set).
+
+The solution set must not contain duplicate subsets. Return the solution in any order.
+
+ 
+
+Example 1:
+
+Input: nums = [1,2,2]
+Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+Example 2:
+
+Input: nums = [0]
+Output: [[],[0]]
+ 
+
+Constraints:
+
+1 <= nums.length <= 10
+-10 <= nums[i] <= 10
+
+NOTE: its not mentioned in the question but order of the numbers in nums array does not matter when creating subset
+
+Solution: 
+==========
+Use recursion and backtrack
+
+Code:
+=======
+
+class Solution {
+public:
+
+    void buildVector(const vector<int>& nums, set<vector<int>>& uniq, vector<int>& vec, int index){
+        for(int i = index; i < nums.size(); i++){
+            vec.push_back(nums[i]);
+            buildVector(nums, uniq, vec, i+1);
+            uniq.insert(vec);
+            vec.pop_back();
+        }
+    }
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
+        set<vector<int>> unique;
+        vector<vector<int>> result;
+        vector<int> temp; 
+        unique.insert(vector<int>{});
+        
+        sort(nums.begin(), nums.end());
+        buildVector(nums, unique, temp, 0);
+
+        for(auto elem: unique){
+            result.push_back(elem);
+        }
+        return result;
+    }
+};
